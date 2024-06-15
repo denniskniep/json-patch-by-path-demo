@@ -45,8 +45,6 @@ func Execute() {
 }
 
 func runRootCommand() error {
-	fmt.Println(jsonDoc)
-
 	req := json.PatchRequest{
 		JsonDoc:   jsonDoc,
 		JsonPath:  jsonPath,
