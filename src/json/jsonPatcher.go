@@ -2,11 +2,8 @@ package json
 
 import (
 	"encoding/json"
-	"strings"
 
 	jsonpatch "github.com/evanphx/json-patch/v5"
-	"github.com/ohler55/ojg/jp"
-	"github.com/ohler55/ojg/oj"
 	"github.com/pkg/errors"
 )
 
@@ -24,25 +21,14 @@ type PatchRequest struct {
 }
 
 func Patch(req PatchRequest) (string, error) {
-	jObj, err := oj.ParseString(req.JsonDoc)
+	pointers, err := ConvertPathToPointers([]byte(req.JsonDoc), req.JsonPath)
 	if err != nil {
 		return "", errors.Wrap(err, "Error during parsing json")
 	}
 
-	jPath, err := jp.ParseString(req.JsonPath)
-	if err != nil {
-		return "", errors.Wrap(err, "Error during parsing jpath")
-	}
-
-	locations := jPath.Locate(jObj, 0)
-
 	jsonDoc := req.JsonDoc
-	for _, l := range locations {
-
-		resolvedJsonPath := l.String()
-		jsonPointer := convertToJsonPointer(resolvedJsonPath)
-
-		patch, err := createJsonPatch(req.Operation, jsonPointer, req.Value)
+	for _, pointer := range pointers {
+		patch, err := createJsonPatch(req.Operation, pointer, req.Value)
 		if err != nil {
 			return "", err
 		}
@@ -85,18 +71,4 @@ func createJsonPatch(operation string, path string, value string) (jsonpatch.Pat
 	}
 
 	return patch, nil
-}
-
-func convertToJsonPointer(resolvedJsonPath string) string {
-	jsonPointer := resolvedJsonPath
-	//fmt.Println("JsonPath:" + jsonPointer)
-
-	jsonPointer = strings.Replace(jsonPointer, "].", "/", -1)
-	jsonPointer = strings.Replace(jsonPointer, "[", "/", -1)
-	jsonPointer = strings.Replace(jsonPointer, "]", "/", -1)
-	jsonPointer = strings.Replace(jsonPointer, ".", "/", -1)
-	jsonPointer = strings.Replace(jsonPointer, "$", "", -1)
-
-	//fmt.Println("JsonPointer:" + jsonPointer)
-	return jsonPointer
 }

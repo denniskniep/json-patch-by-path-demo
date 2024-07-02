@@ -11,13 +11,13 @@
         "program": "${workspaceFolder}",
         "args": [
           "-j",
-          "{\"a\":[{\"abc\":\"123\",\"x\":\"hello\"},{\"abc\":\"456\",\"x\":\"world\"},{\"abc\":\"456\",\"x\":\"test\"}]}",
+          "{\"name\":\"default/eg/http\",\"virtual_hosts\":[{\"name\":\"default/eg/http/www_example_com\",\"domains\":[\"www.example.com\"],\"routes\":[{\"name\":\"httproute/default/backend/rule/0/match/0/www_example_com\",\"match\":{\"prefix\":\"/\"},\"route\":{\"cluster\":\"httproute/default/backend/rule/0\",\"upgrade_configs\":[{\"upgrade_type\":\"websocket\"}]}}]}],\"ignore_port_in_host_matching\":true}",
           "-p",
-          "$.a[?(@.abc=='456')].x",
+          "$.virtual_hosts[?(@.name=='default/eg/http/www_example_com')].domains[0]",
           "-o",
-          "replace",
+          "add",
           "-v",
-          "{\"a\":\"b\"}"
+          "\"TEST.com\""
         ]
       }]
 }

@@ -2,6 +2,8 @@ module github.com/denniskniep/json-patch-by-path-demo
 
 go 1.22.4
 
+require github.com/google/go-cmp v0.6.0
+
 require (
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -27,4 +29,5 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gotest.tools v2.2.0+incompatible
 )
